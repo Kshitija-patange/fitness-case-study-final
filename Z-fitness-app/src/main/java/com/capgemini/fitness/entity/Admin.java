@@ -28,7 +28,7 @@ public class Admin {
 
 	@Id
 	@Column(name = "admin_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer admin_id;
 
 	@NotNull

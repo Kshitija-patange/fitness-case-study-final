@@ -31,6 +31,7 @@ import com.capgemini.fitness.entity.Admin;
 import com.capgemini.fitness.entity.Role;
 import com.capgemini.fitness.entity.Trainer;
 import com.capgemini.fitness.entity.User;
+import com.capgemini.fitness.exception.AdminException;
 import com.capgemini.fitness.exception.TrainerException;
 import com.capgemini.fitness.service.TrainerService;
 
@@ -66,27 +67,19 @@ public class TrainerControllerTest {
 		assertThat(found);
 	}
 	
-	
-	 @Test
-	   public void deleteTrainerById() throws TrainerException {
-		 Trainer trainer = new Trainer(1,"pallavi","abc@gmail.com","pune",987654321L,"ankita@15",Role.TRAINER,null);
-		 service.deleteTrainer(trainer.getTrainerId());
-		 verify(repository,times(1)).deleteById(trainer.getTrainerId());
-	 }
-	 
 	 @Test
 	 public void testFindById() throws TrainerException {
-		 Trainer trainer = new Trainer(1,"pallavi","abc@gmail.com","pune",987654321L,"ankita@15",Role.TRAINER,null);
+		// Trainer trainer = new Trainer(1,"pallavi","abc@gmail.com","pune",987654321L,"ankita@15",Role.TRAINER,null);
 		// repository.save(trainer);
-		 service.addTrainer(trainer);
-		 
+		// service.addTrainer(trainer);
+		 Optional<Trainer> found = repository.findById(1);
 		 //Optional<Trainer> found = repository.findById(1);
-		 Trainer t = service.getTrainerById(1);
-		// assertTrue(found.isPresent());
-		 assertThat(t);
-
-		 //Trainer tr = found.get();
-		 assertEquals(1,t.getTrainerId());
+		 if(found.isPresent())
+	       {
+	        assertEquals(1, found.get().getTrainerId());
+	       }
+	      
 	 }
 
+	
 }

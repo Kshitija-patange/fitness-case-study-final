@@ -1,10 +1,13 @@
 package com.capgemini.Zfitnessapp.controllerTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,26 +19,35 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import com.capgemini.Zfitnessapp.ZFitnessAppApplication;
+import com.capgemini.fitness.dao.TrainerDataDao;
 import com.capgemini.fitness.dao.UserDataDao;
+import com.capgemini.fitness.entity.Admin;
 import com.capgemini.fitness.entity.Role;
+import com.capgemini.fitness.entity.Trainer;
 import com.capgemini.fitness.entity.User;
+import com.capgemini.fitness.exception.AdminException;
+import com.capgemini.fitness.exception.TrainerException;
+import com.capgemini.fitness.exception.UserException;
+import com.capgemini.fitness.service.TrainerService;
 import com.capgemini.fitness.service.UserService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = ZFitnessAppApplication.class)
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-
 public class UserControllerTest {
-	
+	@Autowired
 	private MockMvc mvc;
 
-	@Autowired
+	//@Autowired
+	@MockBean
 	private UserDataDao repository;
 	
 	@Autowired
@@ -46,18 +58,31 @@ public class UserControllerTest {
 		repository.deleteAll();
 	}
 	
-	
 	@Test
 	 @DisplayName("POST /fitness/user")
 	public void CreateUser() throws IOException, Exception {
-		User us = new User(1,"pallavi","badhe","abc@gmail.com","pune","india","maharashtra","pune",412412,987654321L,22,"ankita@15",Role.USER,null,null);
+		User user=new User(1,"Kshitija","Patange","Kshit@gmail.com","Pune","India","Maharastra","Pune",411046,1245789632L,22,"kshi@24",Role.USER,null,null);
 		mvc.perform(post("/fitness/user/")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(JsonUtil.toJson(us)));
+				.content(JsonUtil.toJson(user)));
 
 		List<User> found = repository.findAll();
 		assertThat(found);
 	}
+	
+	 @Test
+	 public void testFindById() throws UserException {
+		// Trainer trainer = new Trainer(1,"pallavi","abc@gmail.com","pune",987654321L,"ankita@15",Role.TRAINER,null);
+		// repository.save(trainer);
+		// service.addTrainer(trainer);
+		 Optional<User> found = repository.findById(1);
+		 //Optional<Trainer> found = repository.findById(1);
+		 if(found.isPresent())
+	       {
+	        assertEquals(1, found.get().getUserId());
+	       }
+	      
+	 }
 
-   
+	
 }
